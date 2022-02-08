@@ -35,7 +35,7 @@
             <input type="number" v-model="statue.price">
           </td>
           <td>
-            <button>Létrehoz</button>
+            <button @click="newStatue">Létrehoz</button>
           </td>
         </tr>
       </tbody>
@@ -74,6 +74,20 @@ export default {
       })
       console.log(Response)
       await this.loadData()
+    },
+    async newStatue() {
+      this.saving='disabled'
+     await fetch('http://127.0.0.1:8000/api/statues', {
+       method: 'POST',
+       headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       },
+       body: JSON.stringify(this.statue) 
+     })
+     await this.loadData()
+     this.saving=false
+     this.resetForm()
     },
   },
   mounted() {
