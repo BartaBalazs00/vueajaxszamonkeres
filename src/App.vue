@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <table>
-      <thead>
+    <table class="table table-dark">
+      <thead >
         <tr>
           <th>Azonsító</th>
           <th>Person</th>
@@ -138,5 +138,15 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+table {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body {
+  background-color: skyblue;
 }
 </style>
