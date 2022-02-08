@@ -18,7 +18,7 @@
           <td>{{ statue.price }}</td>
           <td>
             <button @click="deleteStatue(statue.id)">Törlés</button>
-            <button >Szerkesztés</button>
+            <button @click="editStatue(statue.id)">Szerkesztés</button>
           </td>
         </tr>
         <tr>
@@ -35,7 +35,9 @@
             <input type="number" v-model="statue.price">
           </td>
           <td>
-            <button @click="newStatue">Létrehoz</button>
+            <button v-if="mod_new" @click="newStatue" :disabled="saving">Létrehoz</button>
+            <button v-if="!mod_new" @click="saveStatue" :disabled="saving">Mentés</button>
+            <button v-if="!mod_new" @click="cancelEdit" :disabled="saving">Mégse</button>
           </td>
         </tr>
       </tbody>
@@ -89,6 +91,38 @@ export default {
      this.saving=false
      this.resetForm()
     },
+    async saveStatue() {
+      this.saving='disabled'
+     await fetch(`http://127.0.0.1:8000/api/statues/${this.statue.id}`, {
+       method: 'PATCH',
+       headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       },
+       body: JSON.stringify(this.statue) 
+     })
+     await this.loadData()
+     this.saving=false
+     this.resetForm()
+    },
+    async editStatue(id) {
+      let Response = await fetch(`http://127.0.0.1:8000/api/statues/${id}`)
+      let data = await Response.json()
+      this.statue = {...data};
+      this.mod_new = false
+    },
+    cancelEdit () {
+      this.resetForm()
+    },
+    resetForm() {
+      this.statue = {
+        id: null,
+        person: '',
+        height: '',
+        price: ''
+      }
+      this.mod_new = true
+    }
   },
   mounted() {
     this.loadData()
